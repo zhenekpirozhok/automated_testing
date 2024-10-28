@@ -1,0 +1,19 @@
+{
+  "name": "automated_testing",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "unit": "vitest",
+    "ui": "playwright test --project=ui --ui",
+    "api": "playwright test --project=api --ui"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@playwright/test": "^1.48.2",
+    "@types/node": "^22.8.1",
+    "vitest": "^2.1.4"
+  }
+}
