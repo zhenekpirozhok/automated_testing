@@ -12,7 +12,7 @@ import { defineConfig, devices } from "@playwright/test";
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: "./tests",
+  testDir: "./test",
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -36,12 +36,12 @@ export default defineConfig({
   projects: [
     {
       name: "ui",
-      testDir: "./tests/ui",
+      testDir: "./test/ui",
     },
 
     {
       name: "api",
-      testDir: "./tests/api",
+      testDir: "./test/api",
     },
 
     /* Test against mobile viewports. */
