@@ -1,0 +1,31 @@
+{
+  "name": "automated_testing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.ts",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:api": "vitest run tests/api",
+    "test:watch": "vitest",
+    "test:ui": "playwright test tests/ui",
+    "start": "ts-node src/main.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zhenekpirozhok/automated_testing"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.48.1",
+    "@types/node": "^22.7.8",
+    "@vitest/coverage-v8": "^2.1.4",
+    "vitest": "^2.1.4"
+  },
+  "dependencies": {
+    "mock-fs": "^5.4.1"
+  }
+}
