@@ -5,12 +5,10 @@
   "main": "main.ts",
   "type": "module",
   "scripts": {
-    "test": "vitest run",
-    "test:unit": "vitest run tests/unit",
-    "test:api": "vitest run tests/api",
-    "test:watch": "vitest",
-    "test:ui": "playwright test tests/ui",
-    "start": "ts-node src/main.ts"
+    "unit": "vitest",
+    "ui": "playwright test --project=ui",
+    "api": "playwright test --project=api",
+    "coverage": "vitest run --coverage"
   },
   "repository": {
     "type": "git",

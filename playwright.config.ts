@@ -37,11 +37,13 @@ export default defineConfig({
     {
       name: "ui",
       testDir: "./test/ui",
+      testMatch: "*.spec.ts",
     },
 
     {
       name: "api",
       testDir: "./test/api",
+      testMatch: "*.spec.ts",
     },
 
     /* Test against mobile viewports. */
