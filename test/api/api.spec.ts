@@ -6,7 +6,7 @@ test("GET /posts: should return an array with more than 0 elements", async ({
   request,
 }) => {
   const response = await request.get(`${BASE_URL}/posts`);
-  expect(response.ok()).toBeTruthy();
+  expect(response.status()).toBe(200);
 
   const data = await response.json();
   expect(Array.isArray(data)).toBeTruthy();
@@ -20,7 +20,7 @@ test("GET /comments with parameter: should return elements with postId equal to 
   const response = await request.get(
     `${BASE_URL}/comments?postId=${parameter}`
   );
-  expect(response.ok()).toBeTruthy();
+  expect(response.status()).toBe(200);
 
   const data = await response.json();
   expect(Array.isArray(data)).toBeTruthy();
@@ -44,7 +44,7 @@ test("POST /posts: should create a new post with expected data", async ({
   const response = await request.post(`${BASE_URL}/posts`, {
     data: postData,
   });
-  expect(response.ok()).toBeTruthy();
+  expect(response.status()).toBe(201);
 
   const data = await response.json();
   expect(data).toMatchObject({
@@ -77,7 +77,7 @@ test('GraphQL /graphql: should fetch episodes containing "Rick" in the name', as
   const response = await request.post("https://rickandmortyapi.com/graphql", {
     data: graphqlQuery,
   });
-  expect(response.ok()).toBeTruthy();
+  expect(response.status()).toBe(200);
 
   const data = await response.json();
   const episodes = data.data.episodes.results;
