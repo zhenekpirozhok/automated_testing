@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "unit": "vitest",
-    "ui": "playwright test --project=ui",
+    "ui": "playwright test --project=ui --ui",
     "api": "playwright test --project=api",
     "coverage": "vitest run --coverage"
   },
