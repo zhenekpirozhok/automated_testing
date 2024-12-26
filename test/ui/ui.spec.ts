@@ -26,10 +26,13 @@ test.describe("Sauce Demo Application Tests", () => {
 
   test("Test Case 2: Verify Adding Item to Cart", async ({ page }) => {
     await login(page);
-    await page.click('button[data-test="add-to-cart-sauce-labs-backpack"]');
+    const addButton = page.locator(
+      'button[data-test="add-to-cart-sauce-labs-backpack"]'
+    );
+    await addButton.click();
     const cartBadge = page.locator(".shopping_cart_badge");
     await expect(cartBadge).toHaveText("1");
-    await page.click(".shopping_cart_link");
+    await page.locator(".shopping_cart_link").click();
     const cartItems = page.locator(".cart_item");
     await expect(cartItems).toHaveCount(1);
     await expect(cartItems).toContainText("Sauce Labs Backpack");
@@ -39,12 +42,18 @@ test.describe("Sauce Demo Application Tests", () => {
     page,
   }) => {
     await login(page);
-    await page.click('button[data-test="add-to-cart-sauce-labs-backpack"]');
+    const addButton1 = page.locator(
+      'button[data-test="add-to-cart-sauce-labs-backpack"]'
+    );
+    await addButton1.click();
     const cartBadge = page.locator(".shopping_cart_badge");
     await expect(cartBadge).toHaveText("1");
-    await page.click('button[data-test="add-to-cart-sauce-labs-bike-light"]');
+    const addButton2 = page.locator(
+      'button[data-test="add-to-cart-sauce-labs-bike-light"]'
+    );
+    await addButton2.click();
     await expect(cartBadge).toHaveText("2");
-    await page.click(".shopping_cart_link");
+    await page.locator(".shopping_cart_link").click();
     const cartItems = page.locator(".cart_item");
     await expect(cartItems).toHaveCount(2);
     const item1 = cartItems.locator("[data-test='item-4-title-link']");
@@ -55,28 +64,44 @@ test.describe("Sauce Demo Application Tests", () => {
 
   test("Test Case 4: Verify Removing Item from Cart", async ({ page }) => {
     await login(page);
-    await page.click('button[data-test="add-to-cart-sauce-labs-backpack"]');
-    await page.click(".shopping_cart_link");
+    const addButton = page.locator(
+      'button[data-test="add-to-cart-sauce-labs-backpack"]'
+    );
+    await addButton.click();
+    await page.locator(".shopping_cart_link").click();
     const cartItems = page.locator(".cart_item");
     await expect(cartItems).toHaveCount(1);
     await expect(cartItems).toContainText("Sauce Labs Backpack");
-    await page.click('button[data-test="remove-sauce-labs-backpack"]');
+
+    const removeButton = page.locator(
+      'button[data-test="remove-sauce-labs-backpack"]'
+    );
+    await removeButton.click();
     await expect(cartItems).toHaveCount(0);
     await expect(page.locator(".shopping_cart_badge")).not.toBeVisible();
   });
 
   test("Test Case 5: Verify Checkout Process", async ({ page }) => {
     await login(page);
-    await page.click('button[data-test="add-to-cart-sauce-labs-backpack"]');
-    await page.click(".shopping_cart_link");
-    await page.click('button[data-test="checkout"]');
-    await page.fill("[data-test='firstName']", "John");
-    await page.fill("[data-test='lastName']", "Dou");
-    await page.fill("[data-test='postalCode']", "12345");
-    await page.click('[data-test="continue"]');
+    const addButton = page.locator(
+      'button[data-test="add-to-cart-sauce-labs-backpack"]'
+    );
+    await addButton.click();
+    await page.locator(".shopping_cart_link").click();
+    const checkoutButton = page.locator('[data-test="checkout"]');
+    await checkoutButton.click();
+    const firstNameInput = page.locator("[data-test='firstName']");
+    await firstNameInput.fill("John");
+    const lastNameInput = page.locator("[data-test='lastName']");
+    await lastNameInput.fill("Dou");
+    const postalCodeInput = page.locator("[data-test='postalCode']");
+    await postalCodeInput.fill("12345");
+    const continueButton = page.locator('[data-test="continue"]');
+    await continueButton.click();
+
     const summaryTotal = page.locator(".summary_total_label");
     await expect(summaryTotal).toHaveText("Total: $32.39");
-    await page.click('[data-test="finish"]');
+    await page.locator('[data-test="finish"]').click();
     const completeHeader = page.locator(".complete-header");
     await expect(completeHeader).toHaveText("Thank you for your order!");
   });
@@ -85,18 +110,29 @@ test.describe("Sauce Demo Application Tests", () => {
     page,
   }) => {
     await login(page);
-    await page.click('button[data-test="add-to-cart-sauce-labs-backpack"]');
-    await page.click('button[data-test="add-to-cart-sauce-labs-bike-light"]');
-    await page.click(".shopping_cart_link");
+    const addButton1 = page.locator(
+      'button[data-test="add-to-cart-sauce-labs-backpack"]'
+    );
+    await addButton1.click();
+    const addButton2 = page.locator(
+      'button[data-test="add-to-cart-sauce-labs-bike-light"]'
+    );
+    await addButton2.click();
+
+    await page.locator(".shopping_cart_link").click();
     await expect(page.locator(".cart_item")).toHaveCount(2);
-    await page.click('[data-test="checkout"]');
-    await page.fill("[data-test='firstName']", "John");
-    await page.fill("[data-test='lastName']", "Dou");
-    await page.fill("[data-test='postalCode']", "12345");
-    await page.click('[data-test="continue"]');
+    await page.locator('[data-test="checkout"]').click();
+    const firstNameInput = page.locator("[data-test='firstName']");
+    await firstNameInput.fill("John");
+    const lastNameInput = page.locator("[data-test='lastName']");
+    await lastNameInput.fill("Dou");
+    const postalCodeInput = page.locator("[data-test='postalCode']");
+    await postalCodeInput.fill("12345");
+
+    await page.locator('[data-test="continue"]').click();
     const summaryTotal = page.locator(".summary_total_label");
     await expect(summaryTotal).toHaveText("Total: $43.18");
-    await page.click('[data-test="finish"]');
+    await page.locator('[data-test="finish"]').click();
     const completeHeader = page.locator(".complete-header");
     await expect(completeHeader).toHaveText("Thank you for your order!");
   });
@@ -114,9 +150,9 @@ test.describe("Sauce Demo Application Tests", () => {
 
   test("Test Case 8: Verify User is Able to Logout", async ({ page }) => {
     await login(page);
-    await page.click("#react-burger-menu-btn");
+    await page.locator("#react-burger-menu-btn").click();
     await expect(page.locator(".bm-menu")).toBeVisible();
-    await page.click("#logout_sidebar_link");
+    await page.locator("#logout_sidebar_link").click();
     await expect(page.locator("#user-name")).toBeVisible();
     await expect(page.locator("#password")).toBeVisible();
     await expect(page.locator("#login-button")).toBeVisible();
