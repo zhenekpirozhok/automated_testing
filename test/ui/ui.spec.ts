@@ -8,7 +8,6 @@ import {
   CompletePage,
   SummaryPage,
 } from "./LoginPage";
-import { log } from "console";
 
 const BASE_URL = "https://www.saucedemo.com/";
 
@@ -20,7 +19,23 @@ type ExtendedTest = {
   checkoutPage: CheckoutPage;
   completePage: CompletePage;
   summaryPage: SummaryPage;
+  userFactory: UserFactory;
 };
+
+type User = {
+  username: string;
+  password: string;
+};
+
+class UserFactory {
+  get validUser(): User {
+    return { username: "standard_user", password: "secret_sauce" };
+  }
+
+  get invalidUser(): User {
+    return { username: "standard_user123", password: "secret_sauce123" };
+  }
+}
 
 const extendedTest = test.extend<ExtendedTest>({
   loginPage: async ({ page }, use) => {
@@ -41,6 +56,9 @@ const extendedTest = test.extend<ExtendedTest>({
   summaryPage: async ({ page }, use) => {
     await use(new SummaryPage(page));
   },
+  userFactory: async ({ page }, use) => {
+    await use(new UserFactory());
+  },
 });
 
 extendedTest.describe("Sauce Demo Application Tests", () => {
@@ -50,16 +68,18 @@ extendedTest.describe("Sauce Demo Application Tests", () => {
 
   extendedTest(
     "Test Case 1: Verify User Login",
-    async ({ loginPage, homePage }) => {
-      await loginPage.login();
+    async ({ loginPage, homePage, userFactory }) => {
+      const user = userFactory.validUser;
+      await loginPage.login(user.username, user.password);
       await expect(homePage.appLogo).toHaveText("Swag Labs");
     }
   );
 
   extendedTest(
     "Test Case 2: Verify Adding Item to Cart",
-    async ({ loginPage, homePage, orderPage }) => {
-      await loginPage.login();
+    async ({ loginPage, homePage, orderPage, userFactory }) => {
+      const user = userFactory.validUser;
+      await loginPage.login(user.username, user.password);
       await homePage.addItemToCart("sauce-labs-backpack");
       await expect(homePage.cartBadge).toHaveText("1");
       await homePage.shoppingCart.click();
@@ -70,8 +90,9 @@ extendedTest.describe("Sauce Demo Application Tests", () => {
 
   extendedTest(
     "Test Case 3: Verify Adding Multiple Items to Cart",
-    async ({ loginPage, homePage, orderPage }) => {
-      await loginPage.login();
+    async ({ loginPage, homePage, orderPage, userFactory }) => {
+      const user = userFactory.validUser;
+      await loginPage.login(user.username, user.password);
 
       await homePage.addItemToCart("sauce-labs-backpack");
       await expect(homePage.cartBadge).toHaveText("1");
@@ -88,8 +109,9 @@ extendedTest.describe("Sauce Demo Application Tests", () => {
 
   extendedTest(
     "Test Case 4: Verify Removing Item from Cart",
-    async ({ loginPage, homePage, orderPage }) => {
-      await loginPage.login();
+    async ({ loginPage, homePage, orderPage, userFactory }) => {
+      const user = userFactory.validUser;
+      await loginPage.login(user.username, user.password);
 
       await homePage.addItemToCart("sauce-labs-backpack");
       await homePage.shoppingCart.click();
@@ -111,8 +133,10 @@ extendedTest.describe("Sauce Demo Application Tests", () => {
       checkoutPage,
       summaryPage,
       completePage,
+      userFactory,
     }) => {
-      await loginPage.login();
+      const user = userFactory.validUser;
+      await loginPage.login(user.username, user.password);
 
       await homePage.addItemToCart("sauce-labs-backpack");
 
@@ -138,8 +162,10 @@ extendedTest.describe("Sauce Demo Application Tests", () => {
       checkoutPage,
       summaryPage,
       completePage,
+      userFactory,
     }) => {
-      await loginPage.login();
+      const user = userFactory.validUser;
+      await loginPage.login(user.username, user.password);
 
       await homePage.addItemToCart("sauce-labs-backpack");
       await homePage.addItemToCart("sauce-labs-bike-light");
@@ -161,8 +187,9 @@ extendedTest.describe("Sauce Demo Application Tests", () => {
 
   extendedTest(
     "Test Case 7: Verify Non-Existing User Is Not Able to Login",
-    async ({ loginPage }) => {
-      await loginPage.login("standard_user_123", "secret_sauce_123");
+    async ({ loginPage, userFactory }) => {
+      const user = userFactory.invalidUser;
+      await loginPage.login(user.username, user.password);
 
       await expect(loginPage.errorMessage).toBeVisible();
       await expect(loginPage.errorMessage).toHaveText(
@@ -173,8 +200,9 @@ extendedTest.describe("Sauce Demo Application Tests", () => {
 
   extendedTest(
     "Test Case 8: Verify User is Able to Logout",
-    async ({ loginPage }) => {
-      await loginPage.login();
+    async ({ loginPage, userFactory }) => {
+      const user = userFactory.validUser;
+      await loginPage.login(user.username, user.password);
       await loginPage.openBurgerMenu();
       await expect(loginPage.burgerMenu).toBeVisible();
       await loginPage.logoutButton.click();
