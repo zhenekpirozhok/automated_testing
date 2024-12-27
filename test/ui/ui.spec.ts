@@ -1,65 +1,8 @@
-import { test, expect, Page } from "@playwright/test";
+import { expect } from "@playwright/test";
 
-import {
-  LoginPage,
-  HomePage,
-  OrderPage,
-  CheckoutPage,
-  CompletePage,
-  SummaryPage,
-} from "./LoginPage";
+import { extendedTest } from "./fixtures/extendedTest";
 
 const BASE_URL = "https://www.saucedemo.com/";
-
-type ExtendedTest = {
-  page: Page;
-  loginPage: LoginPage;
-  homePage: HomePage;
-  orderPage: OrderPage;
-  checkoutPage: CheckoutPage;
-  completePage: CompletePage;
-  summaryPage: SummaryPage;
-  userFactory: UserFactory;
-};
-
-type User = {
-  username: string;
-  password: string;
-};
-
-class UserFactory {
-  get validUser(): User {
-    return { username: "standard_user", password: "secret_sauce" };
-  }
-
-  get invalidUser(): User {
-    return { username: "standard_user123", password: "secret_sauce123" };
-  }
-}
-
-const extendedTest = test.extend<ExtendedTest>({
-  loginPage: async ({ page }, use) => {
-    await use(new LoginPage(page));
-  },
-  homePage: async ({ page }, use) => {
-    await use(new HomePage(page));
-  },
-  orderPage: async ({ page }, use) => {
-    await use(new OrderPage(page));
-  },
-  checkoutPage: async ({ page }, use) => {
-    await use(new CheckoutPage(page));
-  },
-  completePage: async ({ page }, use) => {
-    await use(new CompletePage(page));
-  },
-  summaryPage: async ({ page }, use) => {
-    await use(new SummaryPage(page));
-  },
-  userFactory: async ({ page }, use) => {
-    await use(new UserFactory());
-  },
-});
 
 extendedTest.describe("Sauce Demo Application Tests", () => {
   extendedTest.beforeEach(async ({ page }) => {
